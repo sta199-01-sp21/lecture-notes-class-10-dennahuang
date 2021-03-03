@@ -1,7 +1,7 @@
 ---
 title: "Introduction to probability"
-author: ""
-date: ""
+author: "Denna Huang"
+date: "2/24/2021"
 output: html_document
 editor_options: 
   chunk_output_type: console
@@ -28,6 +28,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE,
 ```{r packages}
 library(tidyverse)
 library(vcd) # used for Arthritis data
+install.packages("vcd")
 ```
 
 ## Computing probabilities
@@ -50,16 +51,26 @@ xtabs(~ Treatment + Improved, data = Arthritis) %>%
 
 - How many patients were enrolled in the clinical trial?
 
+84 patients 
+
 - What is the probability a randomly selected patient received the placebo?
+
+43/84 = 51.19%
 
 - What is the probability a randomly selected patient received the placebo
   and had a marked improvement?
   
+  7/84 = 8.3% 
+  
 - What is the probability a randomly selected patient received the placebo
   and the treatment?
   
+  0%
+  
 - What is the probability a randomly selected patient had some improvement or
   was on the treatment?
+  
+  55/84
 
 ## Using computer simulations to calculate probabilities
 
@@ -118,6 +129,8 @@ compute this theoretically yet, but this is what computers are good at.
 
 Before we do this, what is your guess as to what the probability will be?
 
+Less likely than 50%
+
 We'll still use `sample()` to run our simulation many times, but we'll
 use `dplyr` functions to compute the relative frequencies.
 
@@ -158,14 +171,26 @@ Perform a simulation to compute this empirical probability.
 Write down your guess to the answer before you calculate it.
 
 ```{r simulate_rolls}
+  roll_results <- tibble(
+    die_1 = replicate(n = 10000, expr = sample (1:6, size =1)),
+    die_2 = replicate(n = 10000, expr = sample (1:6, size =1))
+  )
 
 ```
 
 ```{r identify_events}
+  roll_results <- roll_results %>%
+    mutate(event_1 == die_1^2 == die_2, 
+  event_2 = abs(die_1 = die_2) == 4)
+roll_results
 
 ```
 
 ```{r summarize_rolls}
+
+roll_results %>%
+  summarize(event_1_prob = mean(event_1),
+            event_2_prob = mean(event_2))
 
 ```
 
